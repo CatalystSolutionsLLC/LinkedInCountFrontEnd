@@ -1,11 +1,33 @@
+import './Dashboard.css';
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 
 const Home = () => (
-  <div>
-    <h1>LinkedIn OAuth2 Login</h1>
-    <a href="/login">Login with LinkedIn</a>
+  <div style={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+    backgroundColor: "#0E2F25",
+    color: "white",
+  }}>
+    <h1 style={{ color: "#0AEF84" }}>Welcome to Catalyst</h1>
+    <a
+      href="/login"
+      style={{
+        backgroundColor: "#0AEF84",
+        padding: "1rem 2rem",
+        borderRadius: "8px",
+        textDecoration: "none",
+        color: "#0D1A13",
+        fontWeight: "bold",
+        marginTop: "1rem",
+      }}
+    >
+      Login with LinkedIn
+    </a>
   </div>
 );
 
@@ -22,11 +44,15 @@ const Dashboard = () => {
   if (user === false) return <Navigate to="/" />;
 
   return (
-    <div>
-      <h1>Welcome, {user.given_name}</h1>
-      <img src={user.picture} alt="Profile" />
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <a href="/logout">Logout</a>
+    <div className="dashboard-container">
+      <div className="card">
+        <img src={user.picture} alt={user.name} />
+        <h1>{user.name}</h1>
+        <p>{user.email}</p>
+        <button className="logout-btn" onClick={() => window.location.href = '/logout'}>
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
