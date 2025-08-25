@@ -1,6 +1,6 @@
 /* Company color palette */
 :root {
-  --green-accent: #0AEF84;
+  --green-accent: #1c5171;
   --green-dark: #0E2F25;
   --green-deep: #123A2D;
   --green-black: #0D1A13;
@@ -134,7 +134,7 @@ body, html {
 }
 
 .login-btn {
-  background: #0aef84;    /* neon green */
+  background: #1c5171;    /* neon green */
   color: #0d1a13;         /* near-black green */
   box-shadow: 0 10px 22px rgba(10, 239, 132, 0.28);
 }
