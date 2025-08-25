@@ -75,7 +75,7 @@ const Dashboard = () => {
           />
         )}
         <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
-        {user.email && <p>{user.email}</p>}
+        
 
         <button
           className="logout-btn"
