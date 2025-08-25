@@ -143,3 +143,18 @@ body, html {
   transform: translateY(-1px);
   box-shadow: 0 14px 24px rgba(10, 239, 132, 0.36);
 }
+
+/* Force the login page to center across the full viewport,
+   regardless of Vite's #root max-width/padding */
+.page-center {
+  position: fixed;   /* escape #root’s max-width layout */
+  inset: 0;          /* full viewport */
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--green-light);
+}
+
+.card.login-card {
+  margin: 0 auto;    /* guard against any text-align overrides */
+}
