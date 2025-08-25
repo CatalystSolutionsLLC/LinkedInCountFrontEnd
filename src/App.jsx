@@ -26,7 +26,7 @@ const Home = () => (
         className="brand-logo"
       />
 
-      <h1 className="title">Welcome to Catalyst</h1>
+      <h1 className="title">Catalyst Engagment HQ</h1>
       <p className="subtitle">Sign in to continue</p>
 
       <a
