@@ -16,6 +16,65 @@ const api = axios.create({
   withCredentials: true, // send/receive session cookie
 });
 
+/* ------------------------- NEW: UsersTable component ------------------------- */
+const UsersTable = ({ users }) => {
+  if (!users?.length) {
+    return (
+      <div className="table-card">
+        <div className="table-header">
+          <h2>Team members</h2>
+          <span className="muted">0</span>
+        </div>
+        <p className="muted">No other users yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="table-card">
+      <div className="table-header">
+        <h2>Team members</h2>
+        <span className="muted">{users.length}</span>
+      </div>
+
+      <div className="table-scroll">
+        <table className="nice-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.sub}>
+                <td>
+                  <div className="user-pill">
+                    <img
+                      src={u.picture || "/catLogoBlue.png"}
+                      alt={u.name || u.email || "User"}
+                      onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
+                    />
+                    <span>{u.name || "Unnamed"}</span>
+                  </div>
+                </td>
+                <td className="mono">{u.email || "—"}</td>
+                <td>
+                  <span className={`badge ${u.emailVerified ? "ok" : "no"}`}>
+                    {u.emailVerified ? "verified" : "unverified"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+/* --------------------------------------------------------------------------- */
+
 // ---------- Pages ----------
 const Home = () => (
   <div className="page-center">
@@ -47,9 +106,10 @@ const Home = () => (
   </div>
 );
 
-
+/* --------------- UPDATED: Dashboard now fetches and shows users --------------- */
 const Dashboard = () => {
-  const [user, setUser] = useState(null); // null = loading, false = not logged in
+  const [user, setUser] = useState(null);   // null = loading, false = not logged in
+  const [users, setUsers] = useState(null); // null = loading
 
   useEffect(() => {
     let cancelled = false;
@@ -66,6 +126,18 @@ const Dashboard = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user) return; // wait until logged in
+    let cancelled = false;
+    api
+      .get("/api/users?limit=50")
+      .then((res) => !cancelled && setUsers(res.data))
+      .catch(() => !cancelled && setUsers([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
   if (user === null) return <div className="page-center"><p>Loading...</p></div>;
   if (user === false) return <Navigate to="/" replace />;
 
@@ -80,7 +152,6 @@ const Dashboard = () => {
           />
         )}
         <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
-        
 
         <button
           className="logout-btn"
@@ -89,9 +160,13 @@ const Dashboard = () => {
           Logout
         </button>
       </div>
+
+      {/* Users table */}
+      <UsersTable users={users ?? []} />
     </div>
   );
 };
+/* --------------------------------------------------------------------------- */
 
 // ---------- App Router ----------
 function App() {
@@ -108,4 +183,4 @@ function App() {
 }
 
 export default App;
-// Ver 0.1.0
+// Ver 0.1.1
