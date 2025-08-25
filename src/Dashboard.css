@@ -160,23 +160,42 @@ body, html {
 }
 
 /* Image login button */
+/* Image login button (uses files in /public) */
 .login-graphic {
   display: inline-block;
-  line-height: 0; /* remove extra inline spacing */
-}
-
-.login-graphic img {
-  display: block;
-  height: 44px;      /* keeps consistent size */
-  width: auto;
+  width: 320px;        /* adjust to your asset */
+  height: 56px;        /* adjust to your asset */
+  background: url('/Sign-In-Large--Default.png') center/contain no-repeat;
   border-radius: 6px;
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
-.login-graphic:hover img {
+.login-graphic:hover {
+  background-image: url('/Sign-In-Large--Hover.png');
   transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
 }
+
+.login-graphic:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.14);
+}
+
+.login-graphic:focus-visible {
+  outline: 2px solid #1C5171; /* your brand blue */
+  outline-offset: 3px;
+  filter: saturate(1.05);
+}
+
+/* Slightly smaller on mobile */
+@media (max-width: 480px) {
+  .login-graphic {
+    width: 280px;
+    height: 44px;
+  }
+}
+
 
 /* Brand logo on login card */
 .brand-logo {
