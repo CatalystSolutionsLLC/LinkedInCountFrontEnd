@@ -1,6 +1,6 @@
 /* Company color palette */
 :root {
-  --green-accent: #0AEF84;
+  --green-accent: #1C5171;
   --green-dark: #0E2F25;
   --green-deep: #1C5171;
   --green-black: #0D1A13;
@@ -176,4 +176,16 @@ body, html {
 .login-graphic:hover img {
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* Brand logo on login card */
+.brand-logo {
+  display: block;
+  margin: 0 auto 12px;
+  height: 56px;     /* tweak as you like (48–64 look good) */
+  width: auto;
+  object-fit: contain;
+}
+@media (max-width: 480px) {
+  .brand-logo { height: 48px; }
 }

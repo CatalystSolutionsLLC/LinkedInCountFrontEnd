@@ -20,10 +20,15 @@ const api = axios.create({
 const Home = () => (
   <div className="page-center">
     <div className="card login-card">
+      <img
+        src="/catLogoBlue.png"
+        alt="Catalyst logo"
+        className="brand-logo"
+      />
+
       <h1 className="title">Welcome to Catalyst</h1>
       <p className="subtitle">Sign in to continue</p>
 
-      {/* Image button from /public */}
       <a
         className="login-graphic"
         href={`${API_BASE}/login`}
