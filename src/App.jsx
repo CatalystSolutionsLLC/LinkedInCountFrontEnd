@@ -1,55 +1,74 @@
-import './Dashboard.css';
+// src/App.jsx
+import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 
+// ---- API base (prod SWA -> Azure App Service) ----
+const API_BASE =
+  import.meta.env.VITE_API_BASE ||
+  window.__API_BASE__ || // optional global override if ever needed
+  "http://localhost:3003";
+
+// One axios instance for the whole app
+const api = axios.create({
+  baseURL: API_BASE,
+  withCredentials: true, // send/receive session cookie
+});
+
+// ---------- Pages ----------
 const Home = () => (
-  <div style={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh",
-    backgroundColor: "#0E2F25",
-    color: "white",
-  }}>
-    <h1 style={{ color: "#0AEF84" }}>Welcome to Catalyst</h1>
-    <a
-      href="/login"
-      style={{
-        backgroundColor: "#0AEF84",
-        padding: "1rem 2rem",
-        borderRadius: "8px",
-        textDecoration: "none",
-        color: "#0D1A13",
-        fontWeight: "bold",
-        marginTop: "1rem",
-      }}
-    >
-      Login with LinkedIn
-    </a>
+  <div className="page-center">
+    <div className="card login-card">
+      <h1 className="title">Welcome to Catalyst</h1>
+      <p className="subtitle">Sign in to continue</p>
+
+      {/* IMPORTANT: hit the backend login, not the SPA */}
+      <a className="btn login-btn" href={`${API_BASE}/login`}>
+        Login with LinkedIn
+      </a>
+    </div>
   </div>
 );
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // null = loading, false = not logged in
 
   useEffect(() => {
-    axios.get("/api/user", { withCredentials: true })
-      .then((res) => setUser(res.data))
-      .catch(() => setUser(false));
+    let cancelled = false;
+    api
+      .get("/api/user")
+      .then((res) => {
+        if (!cancelled) setUser(res.data);
+      })
+      .catch(() => {
+        if (!cancelled) setUser(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  if (user === null) return <p>Loading...</p>;
-  if (user === false) return <Navigate to="/" />;
+  if (user === null) return <div className="page-center"><p>Loading...</p></div>;
+  if (user === false) return <Navigate to="/" replace />;
 
   return (
     <div className="dashboard-container">
       <div className="card">
-        <img src={user.picture} alt={user.name} />
-        <h1>{user.name}</h1>
-        <p>{user.email}</p>
-        <button className="logout-btn" onClick={() => window.location.href = '/logout'}>
+        {user.picture && (
+          <img
+            src={user.picture}
+            alt={user.name || "User"}
+            style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }}
+          />
+        )}
+        <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
+        {user.email && <p>{user.email}</p>}
+
+        <button
+          className="logout-btn"
+          onClick={() => (window.location.href = `${API_BASE}/logout`)}
+        >
           Logout
         </button>
       </div>
@@ -57,12 +76,15 @@ const Dashboard = () => {
   );
 };
 
+// ---------- App Router ----------
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
