@@ -158,3 +158,22 @@ body, html {
 .card.login-card {
   margin: 0 auto;    /* guard against any text-align overrides */
 }
+
+/* Image login button */
+.login-graphic {
+  display: inline-block;
+  line-height: 0; /* remove extra inline spacing */
+}
+
+.login-graphic img {
+  display: block;
+  height: 44px;      /* keeps consistent size */
+  width: auto;
+  border-radius: 6px;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.login-graphic:hover img {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}

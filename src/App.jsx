@@ -23,13 +23,25 @@ const Home = () => (
       <h1 className="title">Welcome to Catalyst</h1>
       <p className="subtitle">Sign in to continue</p>
 
-      {/* IMPORTANT: hit the backend login, not the SPA */}
-      <a className="btn login-btn" href={`${API_BASE}/login`}>
-        Login with LinkedIn
+      {/* Image button from /public */}
+      <a
+        className="login-graphic"
+        href={`${API_BASE}/login`}
+        aria-label="Sign in with LinkedIn"
+      >
+        <img
+          src="/signin-button.png"
+          alt="Sign in with LinkedIn"
+          width="280"
+          height="44"
+          loading="eager"
+          decoding="sync"
+        />
       </a>
     </div>
   </div>
 );
+
 
 const Dashboard = () => {
   const [user, setUser] = useState(null); // null = loading, false = not logged in
