@@ -21,7 +21,7 @@ const Home = () => (
   <div className="page-center">
     <div className="card login-card">
       <img
-        src="/catLogoBlue.png"
+        src="/catLogo.png"
         alt="Catalyst logo"
         className="brand-logo"
       />
