@@ -2,7 +2,7 @@
 :root {
   --green-accent: #0AEF84;
   --green-dark: #0E2F25;
-  --green-deep: #123A2D;
+  --green-deep: #1C5171;
   --green-black: #0D1A13;
   --green-soft: #A2CFE2;
   --green-light: #EEF3EB;
@@ -116,7 +116,7 @@ body, html {
 }
 
 .subtitle {
-  color: #123a2d;         /* medium green */
+  color: #1C5171;         /* medium green */
   margin: 0 0 1.25rem;
 }
 
