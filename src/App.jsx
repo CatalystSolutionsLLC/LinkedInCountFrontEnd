@@ -183,4 +183,4 @@ function App() {
 }
 
 export default App;
-// Ver 0.1.1
+// Ver 0.1.2
