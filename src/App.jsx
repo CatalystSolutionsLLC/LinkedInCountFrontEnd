@@ -13,8 +13,11 @@ const API_BASE =
 // One axios instance for the whole app
 const api = axios.create({
   baseURL: API_BASE,
-  withCredentials: true, // send/receive session cookie
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("jwt") || ""}`,
+  },
 });
+
 
 /* ------------------------- UPDATED: UsersTable component ------------------------- */
 const UsersTable = ({ users }) => {
