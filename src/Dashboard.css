@@ -1,6 +1,4 @@
-/* ============================
-   Company Color Palette
-============================ */
+/* Company color palette */
 :root {
   --green-accent: #1C5171;
   --green-dark: #0E2F25;
@@ -10,41 +8,29 @@
   --green-light: #EEF3EB;
 }
 
-/* ============================
-   Base Styles
-============================ */
-html, body {
+body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
   background-color: var(--green-light);
-  -webkit-font-smoothing: antialiased;
 }
 
-/* ============================
-   Dashboard Layout
-============================ */
 .dashboard-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 100dvh; /* fixes zoom + mobile issues */
-  width: 100%;
-  padding: 40px 16px 80px;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
   box-sizing: border-box;
-  gap: 24px;
 }
 
-/* ============================
-   Profile Card
-============================ */
 .card {
   background-color: var(--green-soft);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 100%;
   text-align: center;
@@ -67,7 +53,11 @@ html, body {
 .card h1 {
   color: var(--green-dark);
   margin-bottom: 0.25rem;
-  font-size: 2rem;
+}
+
+.card p {
+  color: var(--green-black);
+  margin-top: 0;
 }
 
 .logout-btn {
@@ -86,9 +76,7 @@ html, body {
   background-color: var(--green-dark);
 }
 
-/* ============================
-   Responsive Profile Card
-============================ */
+
 @media (max-width: 480px) {
   .card {
     padding: 1.5rem;
@@ -104,47 +92,83 @@ html, body {
   }
 }
 
-/* ============================
-   Login Page
-============================ */
+/* Center any page full-height */
 .page-center {
+  min-height: 100svh; /* handles mobile UI chrome better than 100vh */
   display: grid;
   place-items: center;
-  min-height: 100dvh;
+  background: #eef3eb; /* mint-50 background */
   padding: 24px;
-  background: var(--green-light);
-  box-sizing: border-box;
 }
 
+/* Reuse the glass card look for login */
 .card.login-card {
   max-width: 460px;
   width: 100%;
   text-align: center;
-  margin: 0 auto;
 }
 
+/* Headings on login */
 .title {
-  color: var(--green-dark);
+  color: #0e2f25;         /* deep green */
   font-size: 2rem;
   margin: 0 0 0.25rem;
 }
 
 .subtitle {
-  color: var(--green-deep);
+  color: #1C5171;         /* medium green */
   margin: 0 0 1.25rem;
 }
 
-/* ============================
-   Sign-In Button
-============================ */
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 700;
+  padding: 0.9rem 1.25rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.login-btn {
+  background: #1c5171;    /* neon green */
+  color: #0d1a13;         /* near-black green */
+  box-shadow: 0 10px 22px rgba(10, 239, 132, 0.28);
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(10, 239, 132, 0.36);
+}
+
+/* Force the login page to center across the full viewport,
+   regardless of Vite's #root max-width/padding */
+.page-center {
+  position: fixed;   /* escape #root’s max-width layout */
+  inset: 0;          /* full viewport */
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--green-light);
+}
+
+.card.login-card {
+  margin: 0 auto;    /* guard against any text-align overrides */
+}
+
+/* Image login button */
 .login-graphic {
   display: inline-block;
-  line-height: 0;
+  line-height: 0; /* remove extra inline spacing */
 }
 
 .login-graphic img {
   display: block;
-  height: 44px;
+  height: 44px;      /* keeps consistent size */
+  width: auto;
   border-radius: 6px;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -154,25 +178,25 @@ html, body {
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
 
+/* Brand logo on login card */
 .brand-logo {
   display: block;
   margin: 0 auto 12px;
-  height: 56px;
+  height: 56px;     /* tweak as you like (48–64 look good) */
   width: auto;
   object-fit: contain;
 }
-
 @media (max-width: 480px) {
   .brand-logo { height: 48px; }
 }
 
-/* ============================
-   Team Table
-============================ */
+
+/* Secondary card below the profile */
 .table-card {
+  margin-top: 20px;
   background: var(--green-soft);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   width: min(900px, 92vw);
   padding: 1rem 1rem 0.75rem;
 }
@@ -185,36 +209,29 @@ html, body {
   padding: 0 0.5rem 0.5rem;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-
 .table-header h2 {
   margin: 0;
   color: var(--green-deep);
   font-size: 1.1rem;
 }
-
 .muted {
   color: #5b6b64;
-  opacity: 0.8;
+  opacity: .8;
 }
 
-.table-scroll {
-  overflow-x: auto;
-}
+/* Table */
+.table-scroll { overflow: auto; }
 
-/* ============================
-   Table Styling
-============================ */
 .nice-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.nice-table th,
-.nice-table td {
+.nice-table th, .nice-table td {
   padding: 10px 12px;
   text-align: left;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0,0,0,0.05);
   vertical-align: middle;
 }
 
@@ -228,15 +245,12 @@ html, body {
   z-index: 1;
 }
 
-/* ============================
-   User Cell + Badges
-============================ */
+/* User cell */
 .user-pill {
   display: inline-flex;
   align-items: center;
   gap: 10px;
 }
-
 .user-pill img {
   width: 32px;
   height: 32px;
@@ -245,30 +259,35 @@ html, body {
   border: 2px solid var(--green-accent);
 }
 
+/* Badges */
 .badge {
   display: inline-block;
   padding: 3px 8px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: .2px;
 }
-
 .badge.ok {
   background: rgba(10,239,132,0.15);
   color: #0E2F25;
   border: 1px solid rgba(10,239,132,0.5);
 }
-
 .badge.no {
   background: rgba(13,26,19,0.06);
   color: #0D1A13;
   border: 1px solid rgba(13,26,19,0.15);
 }
 
-/* ============================
-   Numeric Columns
-============================ */
+/* Monospace email for easier scan */
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+/* Keep the whole dashboard centered nicely on tall screens */
+.dashboard-container {
+  flex-direction: column;
+  gap: 16px;
+}
+/* New numeric column styles */
 .nice-table td.numeric,
 .nice-table th.numeric {
   text-align: right;
@@ -279,11 +298,4 @@ html, body {
 .nice-table td.total-cell {
   font-weight: 600;
   color: var(--green-accent);
-}
-
-/* ============================
-   Utility Classes
-============================ */
-.mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
