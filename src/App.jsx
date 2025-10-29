@@ -7,19 +7,23 @@ import axios from "axios";
 // ---- API base (prod SWA -> Azure App Service) ----
 const API_BASE =
   import.meta.env.VITE_API_BASE ||
-  window.__API_BASE__ || // optional global override if ever needed
+  window.__API_BASE__ ||
   "http://localhost:3003";
 
-// One axios instance for the whole app
+/* ---------------------------------- API ---------------------------------- */
 const api = axios.create({
   baseURL: API_BASE,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("jwt") || ""}`,
-  },
+  withCredentials: false, // not needed for JWT
 });
 
+function setAuthHeader() {
+  const token = localStorage.getItem("jwt");
+  if (token) api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  else delete api.defaults.headers.common["Authorization"];
+}
+setAuthHeader();
 
-/* ------------------------- UPDATED: UsersTable component ------------------------- */
+/* ------------------------- UsersTable Component -------------------------- */
 const UsersTable = ({ users }) => {
   if (!users?.length) {
     return (
@@ -54,7 +58,6 @@ const UsersTable = ({ users }) => {
           </thead>
           <tbody>
             {users.map((u) => {
-              // Fallback/mock data until engagement stats are wired up
               const reactions = u.reactions ?? 0;
               const comments = u.comments ?? 0;
               const total = reactions + comments;
@@ -89,18 +92,12 @@ const UsersTable = ({ users }) => {
     </div>
   );
 };
-/* --------------------------------------------------------------------------- */
 
-// ---------- Pages ----------
+/* ---------------------------------- Home ---------------------------------- */
 const Home = () => (
   <div className="page-center">
     <div className="card login-card">
-      <img
-        src="/catLogo.png"
-        alt="Catalyst logo"
-        className="brand-logo"
-      />
-
+      <img src="/catLogo.png" alt="Catalyst logo" className="brand-logo" />
       <h1 className="title">Catalyst Engagement HQ</h1>
       <p className="subtitle">Sign in to continue</p>
 
@@ -122,30 +119,37 @@ const Home = () => (
   </div>
 );
 
-/* --------------- Dashboard fetch + table rendering --------------- */
+/* ------------------------------ Dashboard ------------------------------ */
 const Dashboard = () => {
-  const [user, setUser] = useState(null);   // null = loading, false = not logged in
-  const [users, setUsers] = useState(null); // null = loading
+  const [user, setUser] = useState(null);
+  const [users, setUsers] = useState(null);
 
-  // Fetch logged-in user info
+  // ✅ Capture ?token=... from redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("jwt", token);
+      setAuthHeader();
+      window.history.replaceState({}, document.title, "/dashboard");
+    }
+  }, []);
+
+  // Fetch logged-in user
   useEffect(() => {
     let cancelled = false;
     api
       .get("/api/user")
-      .then((res) => {
-        if (!cancelled) setUser(res.data);
-      })
-      .catch(() => {
-        if (!cancelled) setUser(false);
-      });
+      .then((res) => !cancelled && setUser(res.data))
+      .catch(() => !cancelled && setUser(false));
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Fetch all users list
+  // Fetch all users
   useEffect(() => {
-    if (!user) return; // wait until logged in
+    if (!user) return;
     let cancelled = false;
     api
       .get("/api/users?limit=50")
@@ -164,6 +168,12 @@ const Dashboard = () => {
     );
   if (user === false) return <Navigate to="/" replace />;
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    setAuthHeader();
+    window.location.href = `${API_BASE}/logout`;
+  };
+
   return (
     <div className="dashboard-container">
       <div className="card">
@@ -181,10 +191,7 @@ const Dashboard = () => {
         )}
         <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
 
-        <button
-          className="logout-btn"
-          onClick={() => (window.location.href = `${API_BASE}/logout`)}
-        >
+        <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
       </div>
@@ -194,16 +201,14 @@ const Dashboard = () => {
     </div>
   );
 };
-/* --------------------------------------------------------------------------- */
 
-// ---------- App Router ----------
+/* ---------------------------------- Router ---------------------------------- */
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
@@ -211,4 +216,4 @@ function App() {
 }
 
 export default App;
-// Ver 0.2.0
+// Ver 0.3.0
