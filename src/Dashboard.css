@@ -287,3 +287,15 @@ body, html {
   flex-direction: column;
   gap: 16px;
 }
+/* New numeric column styles */
+.nice-table td.numeric,
+.nice-table th.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #0E2F25;
+}
+
+.nice-table td.total-cell {
+  font-weight: 600;
+  color: var(--green-accent);
+}

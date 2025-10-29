@@ -16,7 +16,7 @@ const api = axios.create({
   withCredentials: true, // send/receive session cookie
 });
 
-/* ------------------------- NEW: UsersTable component ------------------------- */
+/* ------------------------- UPDATED: UsersTable component ------------------------- */
 const UsersTable = ({ users }) => {
   if (!users?.length) {
     return (
@@ -43,30 +43,43 @@ const UsersTable = ({ users }) => {
             <tr>
               <th>User</th>
               <th>Email</th>
+              <th className="numeric">Reactions</th>
+              <th className="numeric">Comments</th>
+              <th className="numeric">Total</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
-              <tr key={u.sub}>
-                <td>
-                  <div className="user-pill">
-                    <img
-                      src={u.picture || "/catLogoBlue.png"}
-                      alt={u.name || u.email || "User"}
-                      onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
-                    />
-                    <span>{u.name || "Unnamed"}</span>
-                  </div>
-                </td>
-                <td className="mono">{u.email || "—"}</td>
-                <td>
-                  <span className={`badge ${u.emailVerified ? "ok" : "no"}`}>
-                    {u.emailVerified ? "verified" : "unverified"}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {users.map((u) => {
+              // Fallback/mock data until engagement stats are wired up
+              const reactions = u.reactions ?? 0;
+              const comments = u.comments ?? 0;
+              const total = reactions + comments;
+
+              return (
+                <tr key={u.sub}>
+                  <td>
+                    <div className="user-pill">
+                      <img
+                        src={u.picture || "/catLogoBlue.png"}
+                        alt={u.name || u.email || "User"}
+                        onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
+                      />
+                      <span>{u.name || "Unnamed"}</span>
+                    </div>
+                  </td>
+                  <td className="mono">{u.email || "—"}</td>
+                  <td className="numeric">{reactions}</td>
+                  <td className="numeric">{comments}</td>
+                  <td className="numeric total-cell">{total}</td>
+                  <td>
+                    <span className={`badge ${u.emailVerified ? "ok" : "no"}`}>
+                      {u.emailVerified ? "verified" : "unverified"}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -85,7 +98,7 @@ const Home = () => (
         className="brand-logo"
       />
 
-      <h1 className="title">Catalyst Engagment HQ</h1>
+      <h1 className="title">Catalyst Engagement HQ</h1>
       <p className="subtitle">Sign in to continue</p>
 
       <a
@@ -106,11 +119,12 @@ const Home = () => (
   </div>
 );
 
-/* --------------- UPDATED: Dashboard now fetches and shows users --------------- */
+/* --------------- Dashboard fetch + table rendering --------------- */
 const Dashboard = () => {
   const [user, setUser] = useState(null);   // null = loading, false = not logged in
   const [users, setUsers] = useState(null); // null = loading
 
+  // Fetch logged-in user info
   useEffect(() => {
     let cancelled = false;
     api
@@ -126,6 +140,7 @@ const Dashboard = () => {
     };
   }, []);
 
+  // Fetch all users list
   useEffect(() => {
     if (!user) return; // wait until logged in
     let cancelled = false;
@@ -138,7 +153,12 @@ const Dashboard = () => {
     };
   }, [user]);
 
-  if (user === null) return <div className="page-center"><p>Loading...</p></div>;
+  if (user === null)
+    return (
+      <div className="page-center">
+        <p>Loading...</p>
+      </div>
+    );
   if (user === false) return <Navigate to="/" replace />;
 
   return (
@@ -148,7 +168,12 @@ const Dashboard = () => {
           <img
             src={user.picture}
             alt={user.name || "User"}
-            style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }}
+            style={{
+              width: 96,
+              height: 96,
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
           />
         )}
         <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
@@ -183,4 +208,4 @@ function App() {
 }
 
 export default App;
-// Ver 0.1.2
+// Ver 0.2.0
