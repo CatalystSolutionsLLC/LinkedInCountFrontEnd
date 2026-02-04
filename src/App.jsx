@@ -111,13 +111,12 @@ const Dashboard = () => {
       {/* Profile Card */}
       <div className="card profile-card">
         <div className="profile-header">
-          {user.picture && (
-            <img
-              src={user.picture}
-              alt={user.name || "User"}
-              className="profile-avatar"
-            />
-          )}
+          <img
+            src={user.picture || "/catLogoBlue.png"}
+            alt={user.name || "User"}
+            className="profile-avatar"
+            onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
+          />
           <div className="profile-info">
             <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
             <p className="profile-email">{user.email}</p>
