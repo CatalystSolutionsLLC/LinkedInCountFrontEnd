@@ -112,7 +112,7 @@ const Dashboard = () => {
       <div className="card profile-card">
         <div className="profile-header">
           <img
-            src={user.picture || "/catLogoBlue.png"}
+            src={`${API_BASE}/api/avatar/${user.sub}`}
             alt={user.name || "User"}
             className="profile-avatar"
             onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
@@ -154,7 +154,7 @@ const Dashboard = () => {
       </div>
 
       {/* Leaderboard */}
-      <Leaderboard api={api} />
+      <Leaderboard api={api} apiBase={API_BASE} />
 
       {/* Sync Status */}
       <SyncStatus api={api} />

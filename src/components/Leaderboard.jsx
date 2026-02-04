@@ -8,7 +8,7 @@ const PERIODS = [
   { value: "week", label: "Week" },
 ];
 
-const Leaderboard = ({ api }) => {
+const Leaderboard = ({ api, apiBase }) => {
   const [users, setUsers] = useState(null);
   const [period, setPeriod] = useState("all");
   const [loading, setLoading] = useState(false);
@@ -95,7 +95,7 @@ const Leaderboard = ({ api }) => {
                   <td>
                     <div className="user-pill">
                       <img
-                        src={u.picture || "/catLogoBlue.png"}
+                        src={`${apiBase}/api/avatar/${u.sub}`}
                         alt={u.name || u.email || "User"}
                         onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
                       />
