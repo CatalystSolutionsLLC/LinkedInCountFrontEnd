@@ -3,6 +3,8 @@ import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
+import Leaderboard from "./components/Leaderboard";
+import SyncStatus from "./components/SyncStatus";
 
 // ---- API base (prod SWA -> Azure App Service) ----
 const API_BASE =
@@ -13,7 +15,7 @@ const API_BASE =
 /* ---------------------------------- API ---------------------------------- */
 const api = axios.create({
   baseURL: API_BASE,
-  withCredentials: false, // not needed for JWT
+  withCredentials: false,
 });
 
 function setAuthHeader() {
@@ -22,76 +24,6 @@ function setAuthHeader() {
   else delete api.defaults.headers.common["Authorization"];
 }
 setAuthHeader();
-
-/* ------------------------- UsersTable Component -------------------------- */
-const UsersTable = ({ users }) => {
-  if (!users?.length) {
-    return (
-      <div className="table-card">
-        <div className="table-header">
-          <h2>Team members</h2>
-          <span className="muted">0</span>
-        </div>
-        <p className="muted">No other users yet.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="table-card">
-      <div className="table-header">
-        <h2>Team members</h2>
-        <span className="muted">{users.length}</span>
-      </div>
-
-      <div className="table-scroll">
-        <table className="nice-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th className="numeric">Reactions</th>
-              <th className="numeric">Comments</th>
-              <th className="numeric">Total</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => {
-              const reactions = u.reactions ?? 0;
-              const comments = u.comments ?? 0;
-              const total = reactions + comments;
-
-              return (
-                <tr key={u.sub}>
-                  <td>
-                    <div className="user-pill">
-                      <img
-                        src={u.picture || "/catLogoBlue.png"}
-                        alt={u.name || u.email || "User"}
-                        onError={(e) => (e.currentTarget.src = "/catLogoBlue.png")}
-                      />
-                      <span>{u.name || "Unnamed"}</span>
-                    </div>
-                  </td>
-                  <td className="mono">{u.email || "—"}</td>
-                  <td className="numeric">{reactions}</td>
-                  <td className="numeric">{comments}</td>
-                  <td className="numeric total-cell">{total}</td>
-                  <td>
-                    <span className={`badge ${u.emailVerified ? "ok" : "no"}`}>
-                      {u.emailVerified ? "verified" : "unverified"}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
 
 /* ---------------------------------- Home ---------------------------------- */
 const Home = () => (
@@ -122,9 +54,9 @@ const Home = () => (
 /* ------------------------------ Dashboard ------------------------------ */
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [users, setUsers] = useState(null);
+  const [stats, setStats] = useState(null);
 
-  // ✅ Capture ?token=... from redirect
+  // Capture ?token=... from redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
@@ -147,14 +79,14 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Fetch all users
+  // Fetch engagement stats
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
     api
-      .get("/api/users?limit=50")
-      .then((res) => !cancelled && setUsers(res.data))
-      .catch(() => !cancelled && setUsers([]));
+      .get("/api/engagement/stats")
+      .then((res) => !cancelled && setStats(res.data))
+      .catch(() => !cancelled && setStats(null));
     return () => {
       cancelled = true;
     };
@@ -176,28 +108,57 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="card">
-        {user.picture && (
-          <img
-            src={user.picture}
-            alt={user.name || "User"}
-            style={{
-              width: 96,
-              height: 96,
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-        )}
-        <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
+      {/* Profile Card */}
+      <div className="card profile-card">
+        <div className="profile-header">
+          {user.picture && (
+            <img
+              src={user.picture}
+              alt={user.name || "User"}
+              className="profile-avatar"
+            />
+          )}
+          <div className="profile-info">
+            <h1>{user.name || `${user.given_name || ""} ${user.family_name || ""}`.trim()}</h1>
+            <p className="profile-email">{user.email}</p>
+          </div>
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
 
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        {/* Stats Summary */}
+        {stats && (
+          <div className="stats-row">
+            <div className="stat-item">
+              <span className="stat-value">{stats.totalEmployees}</span>
+              <span className="stat-label">Employees</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{stats.engagedEmployees}</span>
+              <span className="stat-label">Engaged</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{stats.totalPosts}</span>
+              <span className="stat-label">Posts</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{stats.totalReactions}</span>
+              <span className="stat-label">Reactions</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">{stats.totalComments}</span>
+              <span className="stat-label">Comments</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Users table */}
-      <UsersTable users={users ?? []} />
+      {/* Leaderboard */}
+      <Leaderboard api={api} />
+
+      {/* Sync Status */}
+      <SyncStatus api={api} />
     </div>
   );
 };
@@ -216,4 +177,3 @@ function App() {
 }
 
 export default App;
-// Ver 0.3.0
