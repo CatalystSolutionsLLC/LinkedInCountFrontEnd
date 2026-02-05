@@ -656,3 +656,386 @@ body, html {
     font-size: 1.25rem;
   }
 }
+
+/* ============ Tab Navigation ============ */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--green-soft);
+  padding: 4px;
+  border-radius: 10px;
+  width: min(900px, 92vw);
+  box-sizing: border-box;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--green-deep);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tab-btn.active {
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: var(--green-dark);
+}
+
+/* ============ Post Feed ============ */
+.post-feed-card {
+  width: min(900px, 92vw);
+}
+
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.post-card {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.post-card:last-child {
+  border-bottom: none;
+}
+
+.post-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-radius: 6px;
+}
+
+.post-summary:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.post-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--green-dark);
+  line-height: 1.4;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.post-date {
+  color: #5b6b64;
+}
+
+.post-counts {
+  color: var(--green-deep);
+  font-weight: 500;
+}
+
+.post-expand-icon {
+  color: #5b6b64;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* ============ Post Detail / Engagement List ============ */
+.post-detail {
+  padding: 0 8px 16px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.detail-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--green-deep);
+}
+
+.data-transparency-panel {
+  background: rgba(28, 81, 113, 0.06);
+  border: 1px solid rgba(28, 81, 113, 0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.data-transparency-panel h4 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--green-deep);
+}
+
+.data-transparency-panel ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.data-transparency-panel li {
+  font-size: 0.8rem;
+  color: var(--green-dark);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.data-transparency-panel li:last-child {
+  border-bottom: none;
+}
+
+.data-transparency-panel strong {
+  color: var(--green-deep);
+}
+
+.engagement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.engagement-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.eng-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--green-accent);
+}
+
+.eng-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.eng-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--green-dark);
+}
+
+.eng-email {
+  font-size: 0.75rem;
+  color: #5b6b64;
+}
+
+.eng-type {
+  flex-shrink: 0;
+}
+
+.eng-date {
+  font-size: 0.75rem;
+  color: #5b6b64;
+  flex-shrink: 0;
+}
+
+/* ============ Post Composer ============ */
+.composer-card {
+  width: min(600px, 92vw);
+}
+
+.composer-body {
+  padding: 12px 0 0;
+}
+
+.composer-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 100px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--green-dark);
+  box-sizing: border-box;
+}
+
+.composer-textarea:focus {
+  outline: none;
+  border-color: var(--green-accent);
+  box-shadow: 0 0 0 2px rgba(28, 81, 113, 0.15);
+}
+
+.composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 12px;
+}
+
+.composer-btn {
+  width: auto;
+  padding: 0.6rem 1.5rem;
+}
+
+/* ============ Advocacy ============ */
+.advocacy-card {
+  width: min(900px, 92vw);
+}
+
+.advocacy-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 12px;
+}
+
+.top-advocates {
+  padding: 0 0 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 12px;
+}
+
+.top-advocates h4 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--green-deep);
+}
+
+.advocate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.advocate-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.advocate-avatar {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--green-accent);
+}
+
+.advocate-name {
+  font-weight: 500;
+  color: var(--green-dark);
+}
+
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.suggestion-card {
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.suggestion-card:last-child {
+  border-bottom: none;
+}
+
+.suggestion-text {
+  font-size: 0.9rem;
+  color: var(--green-dark);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.suggestion-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.share-btn {
+  margin-left: auto;
+  padding: 6px 14px;
+  background: #0077B5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.share-btn:hover {
+  background: #005f8d;
+}
+
+/* ============ Responsive - New Components ============ */
+@media (max-width: 600px) {
+  .tab-bar {
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    font-size: 0.75rem;
+    padding: 8px 10px;
+  }
+
+  .post-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .post-meta {
+    flex-wrap: wrap;
+  }
+
+  .engagement-row {
+    flex-wrap: wrap;
+  }
+
+  .suggestion-footer {
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .advocacy-stats {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

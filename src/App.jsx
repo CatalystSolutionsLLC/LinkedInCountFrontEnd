@@ -5,6 +5,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import axios from "axios";
 import Leaderboard from "./components/Leaderboard";
 import SyncStatus from "./components/SyncStatus";
+import PostFeed from "./components/PostFeed";
+import PostComposer from "./components/PostComposer";
+import AdvocacySuggestions from "./components/AdvocacySuggestions";
 
 // ---- API base (prod SWA -> Azure App Service) ----
 const API_BASE =
@@ -52,9 +55,17 @@ const Home = () => (
 );
 
 /* ------------------------------ Dashboard ------------------------------ */
+const TABS = [
+  { key: "leaderboard", label: "Leaderboard" },
+  { key: "posts", label: "Company Posts" },
+  { key: "publish", label: "Publish" },
+  { key: "advocacy", label: "Advocacy" },
+];
+
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
+  const [activeTab, setActiveTab] = useState("leaderboard");
 
   // Capture ?token=... from redirect
   useEffect(() => {
@@ -153,11 +164,29 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Leaderboard */}
-      <Leaderboard api={api} apiBase={API_BASE} />
+      {/* Tab Navigation */}
+      <div className="tab-bar">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            className={`tab-btn ${activeTab === tab.key ? "active" : ""}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-      {/* Sync Status */}
-      <SyncStatus api={api} />
+      {/* Tab Content */}
+      {activeTab === "leaderboard" && (
+        <>
+          <Leaderboard api={api} apiBase={API_BASE} />
+          <SyncStatus api={api} />
+        </>
+      )}
+      {activeTab === "posts" && <PostFeed api={api} apiBase={API_BASE} />}
+      {activeTab === "publish" && <PostComposer api={api} />}
+      {activeTab === "advocacy" && <AdvocacySuggestions api={api} apiBase={API_BASE} />}
     </div>
   );
 };
